@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "64b2f6c2e87f3c98d10a215",
+    "eventId": "64b2f6c2e87f3c98d10a211",
+    "userId": "64b2f6c2e87f3c98d10a1a2b",
+    "createdAt": "2025-01-27T10:00:00Z",
+    "updatedAt": "2025-01-27T10:00:00Z"
+  },
+  {
+    "_id": "64b2f6c2e87f3c98d10a216",
+    "eventId": "64b2f6c2e87f3c98d10a212",
+    "userId": "64b2f6c2e87f3c98d10a1a2e",
+    "createdAt": "2025-01-27T10:00:00Z",
+    "updatedAt": "2025-01-27T10:00:00Z"
+  }
+]

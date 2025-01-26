@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(cuid()) @map("_id")
+  name           String?
+  email          String          @unique
+  password       String
+  role           Role            @default(USER)
+  bio            String?
+  events         Event[]
+  enrolledEvents EnrolledEvent[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("users")
+}
+
+model Event {
+  id             String          @id @default(cuid()) @map("_id")
+  title          String
+  date           DateTime
+  time           String
+  location       String
+  category       String
+  description    String
+  image          String
+  price          Float
+  capacity       Int
+  status         Status          @default(DRAFT)
+  additionalInfo String[]        @map("additional_info")
+  organizer      User?           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId       String
+  EnrolledEvents EnrolledEvent[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@map("events")
+}
+
+model EnrolledEvent {
+  id        String   @id @default(cuid()) @map("_id")
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("enrolled_events")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+}

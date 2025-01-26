@@ -1,0 +1,42 @@
+[
+  {
+    "_id": "64b2f6c2e87f3c98d10a1a2b",
+    "name": "Alice Johnson",
+    "email": "alice.johnson@example.com",
+    "password": "hashedpassword123",
+    "role": "USER",
+    "bio": "A passionate event attendee.",
+    "createdAt": "2025-01-20T12:00:00Z",
+    "updatedAt": "2025-01-25T15:00:00Z"
+  },
+  {
+    "_id": "64b2f6c2e87f3c98d10a1a2c",
+    "name": "Bob Smith",
+    "email": "bob.smith@example.com",
+    "password": "hashedpassword456",
+    "role": "ADMIN",
+    "bio": "Event organizer and admin.",
+    "createdAt": "2025-01-18T10:00:00Z",
+    "updatedAt": "2025-01-27T09:00:00Z"
+  },
+  {
+    "_id": "64b2f6c2e87f3c98d10a1a2d",
+    "name": "Cathy Wilson",
+    "email": "cathy.wilson@example.com",
+    "password": "hashedpassword789",
+    "role": "USER",
+    "bio": "Loves attending music festivals.",
+    "createdAt": "2025-01-21T10:00:00Z",
+    "updatedAt": "2025-01-23T14:00:00Z"
+  },
+  {
+    "_id": "64b2f6c2e87f3c98d10a1a2e",
+    "name": "David Brown",
+    "email": "david.brown@example.com",
+    "password": "hashedpassword101",
+    "role": "USER",
+    "bio": "An avid tech enthusiast.",
+    "createdAt": "2025-01-22T08:00:00Z",
+    "updatedAt": "2025-01-26T10:00:00Z"
+  }
+]
