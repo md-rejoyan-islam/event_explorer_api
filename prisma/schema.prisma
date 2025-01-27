@@ -11,13 +11,13 @@ model User {
   id             String          @id @default(cuid()) @map("_id")
   name           String?
   email          String          @unique
-  password       String
-  role           Role            @default(USER)
+  password       String?
+  role           Role?           @default(USER)
   bio            String?
   events         Event[]
   enrolledEvents EnrolledEvent[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime?       @default(now())
+  updatedAt      DateTime?       @updatedAt
 
   @@map("users")
 }

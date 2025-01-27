@@ -16,6 +16,7 @@ interface PaginationArgs {
 interface LoginData {
   email: string;
   password: string;
+  isAdmin: boolean;
 }
 
 interface RegisterData {
@@ -95,11 +96,20 @@ const Mutation = {
     if (!user) {
       throw new Error("User not found");
     }
+    if (!user.password) {
+      throw new Error("Please login with provider");
+    }
 
     const isMatch = await comparePassword(password, user.password);
 
     if (!isMatch) {
       throw new Error("Wrong password");
+    }
+
+    if (loginData.isAdmin && user.role !== "ADMIN") {
+      throw new Error("User is not an admin");
+    } else if (!loginData.isAdmin && user.role === "ADMIN") {
+      throw new Error("User is an admin");
     }
 
     const jwtToken = createJWT({ id: user.id, email: user.email });
