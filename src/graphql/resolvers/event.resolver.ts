@@ -24,7 +24,8 @@ const Query = {
       page = 1,
       limit = 10,
       search = "",
-    }: { page?: number; limit?: number; search?: string }
+      category = "",
+    }: { page?: number; limit?: number; search?: string; category?: string }
   ): Promise<{ data: Event[]; pageInfo: PageInfo }> => {
     const skip = (page - 1) * limit;
     const take = limit;
@@ -59,6 +60,23 @@ const Query = {
             },
           },
         ],
+        category: {
+          contains: category,
+          mode: "insensitive",
+        },
+
+        // ...(category
+        //   ? { category: { contains: category, mode: "insensitive" } }
+        //   : {}),
+
+        // AND: [
+        //   {
+        //     category: {
+        //       contains: category,
+        //       mode: "insensitive",
+        //     },
+        //   },
+        // ],
       },
     });
 
@@ -76,6 +94,17 @@ const Query = {
     return {
       data: events,
       pageInfo,
+    };
+  },
+  allEventsCategory: async (): Promise<{ data: String[] }> => {
+    const results = await prismaClient.event.findMany({
+      select: {
+        category: true,
+      },
+    });
+
+    return {
+      data: [...new Set(results?.map((result) => result.category))],
     };
   },
 };

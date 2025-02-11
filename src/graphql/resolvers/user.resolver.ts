@@ -83,6 +83,8 @@ const Query = {
 
     return user;
   },
+  getUserByEmail: async (_: unknown, { email }: { email: string }) =>
+    prismaClient.user.findUnique({ where: { email } }),
 };
 
 const Mutation = {

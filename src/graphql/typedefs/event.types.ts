@@ -2,7 +2,8 @@ const EventType = `#graphql
 
 type Query {
   getEventById(id: ID!): Event
-  allEvents(page: Int, limit: Int,search:String): AllEventOutput
+  allEvents(page: Int, limit: Int,search:String,category:String): AllEventOutput
+  allEventsCategory: allEventsCategoryOutput
 }
 
 type Mutation {
@@ -73,6 +74,10 @@ type Paginations {
 type AllEventOutput {
   data: [Event]
   pageInfo: Paginations
+}
+
+type allEventsCategoryOutput {
+  data: [String]
 }
 
 

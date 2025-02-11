@@ -3,6 +3,7 @@ type Query {
   getUserById(id: ID!): User
   allUsers(page: Int, limit: Int): AllUserOutput
   me: User
+  getUserByEmail(email:String!): User
 }
 
 type Mutation {
