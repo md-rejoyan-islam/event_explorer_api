@@ -4,34 +4,25 @@ type Query {
   getEventById(id: ID!): Event
   allEvents(page: Int, limit: Int,search:String,category:String): AllEventOutput
   allEventsCategory: allEventsCategoryOutput
+  getAllEventsByUserId(userId: ID!): [Event]
 }
 
 type Mutation {
   createEvent(eventData: eventCreate!): Event!
   updateEventById(
-    id: ID!
-    title: String
-    date: String
-    time: String
-    location: String
-    category: String
-    description: String
-    image: String
-    price: String
-    capacity: Int
-    organizer: String
-    additionalInfo: [String]
-    status: String
+    updateData: updateDate!
   ): Event!
   deleteEventById(id: ID!): Event!
 }
 
 # type Subscription {}
 
+scalar Date
+
 type Event {
   id: ID!
   title: String!
-  date: String!
+  date: Date!
   time: String!
   location: String!
   category: String!
@@ -60,6 +51,22 @@ input eventCreate {
   authorId: ID!
   additionalInfo: [String]
   status: String
+}
+
+input updateDate {
+    id: ID!
+    title: String
+    date: String
+    time: String
+    location: String
+    category: String
+    description: String
+    image: String
+    price: Float
+    capacity: Int
+    organizer: String
+    additionalInfo: [String]
+    status: String
 }
 
 type Paginations {

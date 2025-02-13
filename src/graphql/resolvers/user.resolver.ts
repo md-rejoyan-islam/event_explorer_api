@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { comparePassword, hashPassword } from "../../utils/hash-password";
 import { createJWT } from "../../utils/jwt";
 import { prismaClient } from "../../utils/prisma-client";
@@ -22,11 +23,6 @@ interface LoginData {
 interface RegisterData {
   email: string;
   password: string;
-  [key: string]: any;
-}
-
-interface UpdateArgs {
-  id: string;
   [key: string]: any;
 }
 
@@ -85,6 +81,9 @@ const Query = {
   },
   getUserByEmail: async (_: unknown, { email }: { email: string }) =>
     prismaClient.user.findUnique({ where: { email } }),
+
+  getAllAdmins: async () =>
+    prismaClient.user.findMany({ where: { role: "ADMIN" } }),
 };
 
 const Mutation = {
@@ -145,8 +144,11 @@ const Mutation = {
     return user;
   },
 
-  updateUserById: async (_: unknown, args: UpdateArgs) => {
-    const { id, ...update } = args;
+  updateUserById: async (
+    _: unknown,
+    { profileUpdate }: { profileUpdate: User }
+  ) => {
+    const { id, ...update } = profileUpdate;
 
     const user = await prismaClient.user.update({
       where: { id },
@@ -179,6 +181,7 @@ const userResolver = {
       const events = await prismaClient.event.findMany({
         where: { authorId: parent.id },
       });
+
       return events;
     },
 

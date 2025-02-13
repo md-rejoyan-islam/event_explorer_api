@@ -107,6 +107,16 @@ const Query = {
       data: [...new Set(results?.map((result) => result.category))],
     };
   },
+  getAllEventsByUserId: async (
+    _: unknown,
+    { userId }: { userId: string }
+  ): Promise<Event[]> => {
+    console.log(userId);
+
+    return await prismaClient.event.findMany({
+      where: { authorId: userId },
+    });
+  },
 };
 
 const Mutation = {
@@ -119,20 +129,21 @@ const Mutation = {
       error?: { message: string };
     }
   ): Promise<Event> => {
-    const { status, data, error } = context;
+    // const { status, data, error } = context;
+    console.log(context);
 
-    if (status === "error") {
-      throw new Error(`${error?.message}. Please login first.`);
-    } else {
-      const { email } = data!;
-      const userCount = await prismaClient.user.count({
-        where: { email },
-      });
+    // if (status === "error") {
+    //   throw new Error(`${error?.message}. Please login first.`);
+    // } else {
+    //   const { email } = data!;
+    //   const userCount = await prismaClient.user.count({
+    //     where: { email },
+    //   });
 
-      if (userCount !== 1) {
-        throw new Error("User not found. Please register first");
-      }
-    }
+    //   if (userCount !== 1) {
+    //     throw new Error("User not found. Please register first");
+    //   }
+    // }
 
     const event = await prismaClient.event.create({
       data: eventData,
@@ -143,9 +154,9 @@ const Mutation = {
 
   updateEventById: async (
     _: unknown,
-    args: { id: string; [key: string]: any }
+    updateData: { updateData: Event }
   ): Promise<Event> => {
-    const { id, ...update } = args;
+    const { id, ...update } = updateData.updateData;
 
     const eventCount = await prismaClient.event.count({
       where: { id },

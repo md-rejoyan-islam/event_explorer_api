@@ -10,8 +10,36 @@ const Query = {
     _: unknown,
     { id }: { id: string }
   ): Promise<EnrolledEvent | null> => {
-    return await prismaClient.enrolledEvent.findUnique({
+    const event = await prismaClient.enrolledEvent.findUnique({
       where: { id },
+    });
+    if (!event) {
+      throw new Error("Enrolled event not found");
+    }
+
+    return event;
+  },
+  checkEnrolledEvent: async (
+    _: unknown,
+    { eventId, userId }: { eventId: string; userId: string }
+  ): Promise<boolean> => {
+    const enrolledEvent = await prismaClient.enrolledEvent.findFirst({
+      where: { eventId, userId },
+    });
+    return enrolledEvent ? true : false;
+  },
+  getEnrolledEventsByCreaterId: async (
+    _: unknown,
+    { authorId }: { authorId: string }
+  ): Promise<EnrolledEvent[]> => {
+    console.log(authorId);
+
+    return await prismaClient.enrolledEvent.findMany({
+      where: {
+        event: {
+          authorId,
+        },
+      },
     });
   },
 };

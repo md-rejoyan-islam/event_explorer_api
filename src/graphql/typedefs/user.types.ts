@@ -4,16 +4,19 @@ type Query {
   allUsers(page: Int, limit: Int): AllUserOutput
   me: User
   getUserByEmail(email:String!): User
+  getAllAdmins: [User]
 }
 
 type Mutation {
   userRegister(registerData: userRegisterType!): User!
   userLogin(loginData: userLoginType!): Token!
-  updateUserById(id: ID!, name: String, email: String, password: String): User!
+  updateUserById(profileUpdate:ProfileUpdate! ): User!
   deleteUserById(id: ID!): User!
 }
 
 # type Subscription {}
+
+
 
 type User {
   id: ID!
@@ -40,6 +43,14 @@ input userLoginType {
   password: String!
   isAdmin: Boolean!
 }
+
+input ProfileUpdate {
+  id: ID!
+  name: String
+  email: String
+  password: String
+  bio: String
+  }
 
 type Token {
   token: String!

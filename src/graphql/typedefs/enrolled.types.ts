@@ -1,7 +1,9 @@
 const EnrolledTypes = `#graphql 
 type Query {
-  getEnrolledEventById(id: ID!): EnrolledEvent!
+  getEnrolledEventById(id: ID!): EnrolledEvent
   allEnrolledEvents: [EnrolledEvent]
+  checkEnrolledEvent(eventId: ID!, userId: ID!): Boolean
+  getEnrolledEventsByCreaterId(authorId: ID!): [EnrolledEvent]
 }
 
 type Mutation {
