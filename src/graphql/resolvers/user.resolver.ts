@@ -1,178 +1,109 @@
 import { User } from "@prisma/client";
-import { isAdmin, isAuthenticated } from "../../utils/auth";
-import { comparePassword, hashPassword } from "../../utils/hash-password";
-import { createJWT } from "../../utils/jwt";
+import { UserService } from "../../services/user.service";
 import { prismaClient } from "../../utils/prisma-client";
 
-interface Context {
-  token: string;
-}
-
-interface PaginationArgs {
-  page?: number;
-  limit?: number;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
-  isAdmin: boolean;
-}
-
-interface RegisterData {
-  email: string;
-  password: string;
-  [key: string]: any;
-}
+import isAuthenticated from "../../middlewares/isAuthenticated.middleware";
+import { EventService } from "../../services/event.service";
+import {
+  CONTEXT_TYPE,
+  USER_LOGIN_PARAMS,
+  USER_REGISTER_PARAMS,
+} from "../../utils/types";
 
 const Query = {
-  getUserById: async (_: void, { id }: { id: string }, context: Context) => {
-    const { token } = context;
+  /**
+   * @description Get a user by ID
+   * @access public
+   * */
+  getUserById: isAuthenticated(async (_: void, { id }: { id: string }) => {
+    return UserService.getUserById(id);
+  }),
 
-    await isAuthenticated(token);
-
-    return prismaClient.user.findUnique({ where: { id } });
-  },
-  allUsers: async (_: void, { page = 1, limit = 10 }: PaginationArgs) => {
-    const skip = (page - 1) * limit;
-    const take = limit;
-
-    const users = await prismaClient.user.findMany({
-      skip,
-      take,
-    });
-
-    const count = await prismaClient.user.count();
-
-    const pageInfo = {
-      totalItems: count,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-      perPage: limit,
-      nextPage: page < Math.ceil(count / limit) ? page + 1 : null,
-      previousPage: page > 1 ? page - 1 : null,
-    };
-
-    return {
-      data: users,
-      pageInfo,
-    };
+  /**
+   * @description Get all users with pagination
+   * @access Admin
+   * */
+  allUsers: async (
+    _: void,
+    { page = 1, limit = 10 }: { page: number; limit: number }
+  ) => {
+    return UserService.allUsers(page, limit);
   },
 
-  me: async (_: void, __: void, context: Context) => {
-    const { token } = context;
+  /**
+   * @description Get the currently authenticated user
+   * @access private
+   * */
+  me: isAuthenticated(async (_: void, __: void, context: CONTEXT_TYPE) => {
+    const { user } = context;
+    return user;
+  }),
 
-    const { data } = await isAuthenticated(token);
-
-    if (!data) {
-      throw new Error("Authentication failed");
-    }
-    return data.user;
+  /**
+   * @description Get a user by email
+   * @access private (Admin)
+   * */
+  getUserByEmail: async (_: void, { email }: { email: string }) => {
+    return UserService.getUserByEmail(email);
   },
-  getUserByEmail: async (_: void, { email }: { email: string }) =>
-    prismaClient.user.findUnique({ where: { email } }),
 
-  getAllAdmins: async (_: void, __: void, context: Context) => {
-    const { token } = context;
-    const { data } = await isAuthenticated(token);
-
-    if (!data) {
-      throw new Error("Authentication failed");
-    }
-    if (data.user) isAdmin(data.user);
-
-    return prismaClient.user.findMany({ where: { role: "ADMIN" } });
-  },
+  /**
+   * @description Get all users with pagination
+   * @access private (Admin)
+   * */
+  getAllAdmins: isAuthenticated(async (_: void, __: void) => {
+    return UserService.getAllAdmins();
+  }),
 };
 
 const Mutation = {
+  /**
+   * @description Login a user
+   * @access public
+   * */
   userLogin: async (
     _: void,
-    { loginData }: { loginData: LoginData }
-  ): Promise<{ token: string }> => {
-    const { email, password } = loginData;
-    const user = await prismaClient.user.findUnique({ where: { email } });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-    if (!user.password) {
-      throw new Error("Please login with provider");
-    }
-
-    const isMatch = await comparePassword(password, user.password);
-
-    if (!isMatch) {
-      throw new Error("Wrong password");
-    }
-
-    if (loginData.isAdmin && user.role !== "ADMIN") {
-      throw new Error("User is not an admin");
-    } else if (!loginData.isAdmin && user.role === "ADMIN") {
-      throw new Error("User is an admin");
-    }
-
-    const jwtToken = createJWT({ id: user.id, email: user.email });
-
-    return {
-      token: jwtToken,
-    };
+    { loginData }: { loginData: USER_LOGIN_PARAMS }
+  ) => {
+    return UserService.userLogin(loginData);
   },
+
+  /**
+   * @description Register a user
+   * @access public
+   * */
 
   userRegister: async (
     _: void,
-    { registerData }: { registerData: RegisterData }
+    { registerData }: { registerData: USER_REGISTER_PARAMS }
   ) => {
-    const { email } = registerData;
-
-    const existingUser = await prismaClient.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      throw new Error("User already exists");
-    }
-
-    const user = await prismaClient.user.create({
-      data: {
-        ...registerData,
-        password: await hashPassword(registerData.password),
-      },
-    });
-
-    return user;
+    return UserService.userRegister(registerData);
   },
 
-  updateUserById: async (
-    _: void,
-    { profileUpdate }: { profileUpdate: User }
-  ) => {
-    const { id, ...update } = profileUpdate;
-
-    const user = await prismaClient.user.update({
-      where: { id },
-      data: update,
-    });
-
-    if (!user) {
-      throw new Error("User not found");
+  /**
+   * @description Update user by ID
+   * @access private
+   * */
+  updateUserById: isAuthenticated(
+    async (_: void, { profileUpdate }: { profileUpdate: User }) => {
+      return UserService.updateUserById(profileUpdate);
     }
+  ),
 
-    return user;
-  },
+  /**
+   * @description Delete user by ID
+   * @access private
+   * */
+  deleteUserById: isAuthenticated(async (_: void, { id }: { id: string }) => {
+    return UserService.deleteUserById(id);
+  }),
 
-  deleteUserById: async (_: void, { id }: { id: string }) => {
-    const user = await prismaClient.user.delete({ where: { id } });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    return user;
-  },
+  /**
+   * @description Create login token
+   * @access public
+   * */
   createLoginToken: async (_: void, { email }: { email: string }) => {
-    const token = createJWT({ email });
-    return token;
+    return UserService.createLoginToken(email);
   },
 };
 
@@ -181,13 +112,8 @@ const userResolver = {
   Mutation,
   User: {
     events: async (parent: { id: string }) => {
-      const events = await prismaClient.event.findMany({
-        where: { authorId: parent.id },
-      });
-
-      return events;
+      return EventService.getAllEventsByUserId(parent.id);
     },
-
     enrolledEvents: async (parent: { id: string }) => {
       const enrolledEvents = await prismaClient.enrolledEvent.findMany({
         where: { userId: parent.id },

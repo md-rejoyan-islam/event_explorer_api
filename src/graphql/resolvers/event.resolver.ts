@@ -1,197 +1,63 @@
 import { Event, User } from "@prisma/client";
-import { prismaClient } from "../../utils/prisma-client";
-
-type PageInfo = {
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-  perPage: number;
-  nextPage: number | null;
-  previousPage: number | null;
-};
+import isAdmin from "../../middlewares/isAdmin.middleware";
+import isAuthenticated from "../../middlewares/isAuthenticated.middleware";
+import { EventService } from "../../services/event.service";
 
 const Query = {
   getEventById: async (
-    _: unknown,
+    _: void,
     { id }: { id: string }
   ): Promise<Event | null> => {
-    return await prismaClient.event.findUnique({ where: { id } });
+    return await EventService.getEventById(id);
   },
 
   allEvents: async (
-    _: unknown,
+    _: void,
     {
       page = 1,
       limit = 10,
       search = "",
       category = "",
     }: { page?: number; limit?: number; search?: string; category?: string }
-  ): Promise<{ data: Event[]; pageInfo: PageInfo }> => {
-    const skip = (page - 1) * limit;
-    const take = limit;
-
-    const events = await prismaClient.event.findMany({
-      skip,
-      take,
-      where: {
-        OR: [
-          {
-            title: {
-              contains: search,
-              mode: "insensitive",
-            },
-          },
-          {
-            description: {
-              contains: search,
-              mode: "insensitive",
-            },
-          },
-          {
-            location: {
-              contains: search,
-              mode: "insensitive",
-            },
-          },
-          {
-            category: {
-              contains: search,
-              mode: "insensitive",
-            },
-          },
-        ],
-        category: {
-          contains: category,
-          mode: "insensitive",
-        },
-
-        // ...(category
-        //   ? { category: { contains: category, mode: "insensitive" } }
-        //   : {}),
-
-        // AND: [
-        //   {
-        //     category: {
-        //       contains: category,
-        //       mode: "insensitive",
-        //     },
-        //   },
-        // ],
-      },
-    });
-
-    const count = await prismaClient.event.count();
-
-    const pageInfo: PageInfo = {
-      totalItems: count,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-      perPage: limit,
-      nextPage: page < Math.ceil(count / limit) ? page + 1 : null,
-      previousPage: page > 1 ? page - 1 : null,
-    };
-
-    return {
-      data: events,
-      pageInfo,
-    };
+  ) => {
+    return await EventService.getAllEvents(page, limit, search, category);
   },
+
   allEventsCategory: async (): Promise<{ data: String[] }> => {
-    const results = await prismaClient.event.findMany({
-      select: {
-        category: true,
-      },
-    });
-
-    return {
-      data: [...new Set(results?.map((result) => result.category))],
-    };
+    return await EventService.getAllEventsCategory();
   },
-  getAllEventsByUserId: async (
-    _: unknown,
-    { userId }: { userId: string }
-  ): Promise<Event[]> => {
-    console.log(userId);
 
-    return await prismaClient.event.findMany({
-      where: { authorId: userId },
-    });
-  },
+  getAllEventsByUserId: isAuthenticated(
+    isAdmin(
+      async (_: void, { userId }: { userId: string }): Promise<Event[]> => {
+        return await EventService.getAllEventsByUserId(userId);
+      }
+    )
+  ),
 };
 
 const Mutation = {
-  createEvent: async (
-    _: unknown,
-    { eventData }: { eventData: Event },
-    context: {
-      status: string;
-      data?: { email: string };
-      error?: { message: string };
-    }
-  ): Promise<Event> => {
-    // const { status, data, error } = context;
-    console.log(context);
+  createEvent: isAuthenticated(
+    isAdmin(
+      async (_: void, { eventData }: { eventData: Event }): Promise<Event> => {
+        return await EventService.createEvent(eventData);
+      }
+    )
+  ),
 
-    // if (status === "error") {
-    //   throw new Error(`${error?.message}. Please login first.`);
-    // } else {
-    //   const { email } = data!;
-    //   const userCount = await prismaClient.user.count({
-    //     where: { email },
-    //   });
+  updateEventById: isAuthenticated(
+    isAdmin(
+      async (_: void, updateData: { updateData: Event }): Promise<Event> => {
+        return await EventService.updateEventById(updateData.updateData);
+      }
+    )
+  ),
 
-    //   if (userCount !== 1) {
-    //     throw new Error("User not found. Please register first");
-    //   }
-    // }
-
-    const event = await prismaClient.event.create({
-      data: eventData,
-    });
-
-    return event;
-  },
-
-  updateEventById: async (
-    _: unknown,
-    updateData: { updateData: Event }
-  ): Promise<Event> => {
-    const { id, ...update } = updateData.updateData;
-
-    const eventCount = await prismaClient.event.count({
-      where: { id },
-    });
-
-    if (eventCount < 1) {
-      throw new Error("Event not found");
-    }
-
-    const event = await prismaClient.event.update({
-      where: { id },
-      data: update,
-    });
-
-    return event;
-  },
-
-  deleteEventById: async (
-    _: unknown,
-    { id }: { id: string }
-  ): Promise<Event | null> => {
-    const event = await prismaClient.event.findFirst({
-      where: { id },
-    });
-
-    if (!event) {
-      throw new Error("Event not found");
-    }
-
-    await prismaClient.event.delete({
-      where: { id },
-    });
-
-    return event;
-  },
+  deleteEventById: isAuthenticated(
+    isAdmin(async (_: void, { id }: { id: string }): Promise<Event | null> => {
+      return await EventService.deleteEventById(id);
+    })
+  ),
 };
 
 const eventResolver = {
@@ -199,11 +65,7 @@ const eventResolver = {
   Mutation,
   Event: {
     organizer: async (parent: Event): Promise<User | null> => {
-      const organizer = await prismaClient.user.findUnique({
-        where: { id: parent.authorId },
-      });
-
-      return organizer;
+      return await EventService.getOrganizer(parent);
     },
   },
 };
