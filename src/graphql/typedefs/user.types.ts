@@ -12,6 +12,7 @@ type Mutation {
   userLogin(loginData: userLoginType!): Token!
   updateUserById(profileUpdate:ProfileUpdate! ): User!
   deleteUserById(id: ID!): User!
+  createLoginToken(email: String!): String!
 }
 
 # type Subscription {}

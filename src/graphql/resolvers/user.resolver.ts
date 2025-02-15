@@ -1,12 +1,11 @@
 import { User } from "@prisma/client";
+import { isAdmin, isAuthenticated } from "../../utils/auth";
 import { comparePassword, hashPassword } from "../../utils/hash-password";
 import { createJWT } from "../../utils/jwt";
 import { prismaClient } from "../../utils/prisma-client";
 
 interface Context {
-  status: string;
-  data?: { email: string };
-  error?: { message: string };
+  token: string;
 }
 
 interface PaginationArgs {
@@ -27,10 +26,14 @@ interface RegisterData {
 }
 
 const Query = {
-  getUserById: async (_: unknown, { id }: { id: string }) =>
-    prismaClient.user.findUnique({ where: { id } }),
+  getUserById: async (_: void, { id }: { id: string }, context: Context) => {
+    const { token } = context;
 
-  allUsers: async (_: unknown, { page = 1, limit = 10 }: PaginationArgs) => {
+    await isAuthenticated(token);
+
+    return prismaClient.user.findUnique({ where: { id } });
+  },
+  allUsers: async (_: void, { page = 1, limit = 10 }: PaginationArgs) => {
     const skip = (page - 1) * limit;
     const take = limit;
 
@@ -56,39 +59,35 @@ const Query = {
     };
   },
 
-  me: async (_: unknown, __: unknown, context: Context) => {
-    const { status, data, error } = context;
+  me: async (_: void, __: void, context: Context) => {
+    const { token } = context;
 
-    if (status === "error") {
-      throw new Error(`${error?.message}. Please login first.`);
+    const { data } = await isAuthenticated(token);
+
+    if (!data) {
+      throw new Error("Authentication failed");
     }
-
-    const email = data?.email;
-
-    if (!email) {
-      throw new Error("No email provided in context");
-    }
-
-    const user = await prismaClient.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    return user;
+    return data.user;
   },
-  getUserByEmail: async (_: unknown, { email }: { email: string }) =>
+  getUserByEmail: async (_: void, { email }: { email: string }) =>
     prismaClient.user.findUnique({ where: { email } }),
 
-  getAllAdmins: async () =>
-    prismaClient.user.findMany({ where: { role: "ADMIN" } }),
+  getAllAdmins: async (_: void, __: void, context: Context) => {
+    const { token } = context;
+    const { data } = await isAuthenticated(token);
+
+    if (!data) {
+      throw new Error("Authentication failed");
+    }
+    if (data.user) isAdmin(data.user);
+
+    return prismaClient.user.findMany({ where: { role: "ADMIN" } });
+  },
 };
 
 const Mutation = {
   userLogin: async (
-    _: unknown,
+    _: void,
     { loginData }: { loginData: LoginData }
   ): Promise<{ token: string }> => {
     const { email, password } = loginData;
@@ -121,7 +120,7 @@ const Mutation = {
   },
 
   userRegister: async (
-    _: unknown,
+    _: void,
     { registerData }: { registerData: RegisterData }
   ) => {
     const { email } = registerData;
@@ -145,7 +144,7 @@ const Mutation = {
   },
 
   updateUserById: async (
-    _: unknown,
+    _: void,
     { profileUpdate }: { profileUpdate: User }
   ) => {
     const { id, ...update } = profileUpdate;
@@ -162,7 +161,7 @@ const Mutation = {
     return user;
   },
 
-  deleteUserById: async (_: unknown, { id }: { id: string }) => {
+  deleteUserById: async (_: void, { id }: { id: string }) => {
     const user = await prismaClient.user.delete({ where: { id } });
 
     if (!user) {
@@ -170,6 +169,10 @@ const Mutation = {
     }
 
     return user;
+  },
+  createLoginToken: async (_: void, { email }: { email: string }) => {
+    const token = createJWT({ email });
+    return token;
   },
 };
 

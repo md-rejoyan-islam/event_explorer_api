@@ -22,7 +22,19 @@ export default async function graphQlServer(): Promise<void> {
 
   app.use(router);
 
-  app.use("/graphql", expressMiddleware(await createGraphQLServer()));
+  app.use(
+    "/graphql",
+    expressMiddleware(await createGraphQLServer(), {
+      context: async ({ req }) => {
+        const bearerToken = req.headers.authorization || "";
+        const token = bearerToken?.split(" ")[1];
+
+        return {
+          token: token ?? "",
+        };
+      },
+    })
+  );
 
   // not found route
   app.use("*", (_, res: Response) => {
