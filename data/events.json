@@ -1,6 +1,6 @@
 [
   {
-    "_id": "64b2f6c2e87f3c98d10a1a2f",
+    "id": "64b2f2c2e87f3198d10a1a1a",
     "title": "Tech Conference 2025",
     "date": "2025-02-15T00:00:00Z",
     "time": "10:00 AM",
@@ -11,13 +11,11 @@
     "price": 50.0,
     "capacity": 200,
     "status": "PUBLISHED",
-    "additional_info": ["Bring your laptop", "Networking event included"],
-    "authorId": "64b2f6c2e87f3c98d10a1a2c",
-    "createdAt": "2025-01-25T12:00:00Z",
-    "updatedAt": "2025-01-25T12:00:00Z"
+    "additionalInfo": ["Bring your laptop", "Networking event included"],
+    "authorId": "64b2f2c2e87f3198d10a1a2b"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a210",
+    "id": "64b2f2c2e87f3198d10a1a1b",
     "title": "Music Festival 2025",
     "date": "2025-03-10T00:00:00Z",
     "time": "2:00 PM",
@@ -28,13 +26,11 @@
     "price": 25.0,
     "capacity": 500,
     "status": "DRAFT",
-    "additional_info": ["Outdoor event", "Food trucks available"],
-    "authorId": "64b2f6c2e87f3c98d10a1a2c",
-    "createdAt": "2025-01-26T12:00:00Z",
-    "updatedAt": "2025-01-26T12:00:00Z"
+    "additionalInfo": ["Outdoor event", "Food trucks available"],
+    "authorId": "64b2f2c2e87f3198d10a1a2b"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a211",
+    "id": "64b2f2c2e87f3198d10a1a1c",
     "title": "Art Expo 2025",
     "date": "2025-04-05T00:00:00Z",
     "time": "9:00 AM",
@@ -45,13 +41,11 @@
     "price": 20.0,
     "capacity": 100,
     "status": "PUBLISHED",
-    "additional_info": ["Workshops available", "Interactive art"],
-    "authorId": "64b2f6c2e87f3c98d10a1a2c",
-    "createdAt": "2025-01-27T12:00:00Z",
-    "updatedAt": "2025-01-27T12:00:00Z"
+    "additionalInfo": ["Workshops available", "Interactive art"],
+    "authorId": "64b2f6c2e87f3c98d10a1a2c"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a212",
+    "id": "64b2f2c2e87f3198d10a1a1d",
     "title": "Photography Workshop",
     "date": "2025-03-20T00:00:00Z",
     "time": "11:00 AM",
@@ -62,13 +56,11 @@
     "price": 40.0,
     "capacity": 30,
     "status": "PUBLISHED",
-    "additional_info": ["Bring your camera", "Snacks provided"],
-    "authorId": "64b2f6c2e87f3c98d10a1a2d",
-    "createdAt": "2025-01-27T12:00:00Z",
-    "updatedAt": "2025-01-27T12:00:00Z"
+    "additionalInfo": ["Bring your camera", "Snacks provided"],
+    "authorId": "64b2f6c2e87f3c98d10a1a2c"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a213",
+    "id": "64b2f2c2e87f3198d10a1a1e",
     "title": "Startup Pitch Night",
     "date": "2025-05-01T00:00:00Z",
     "time": "6:00 PM",
@@ -79,16 +71,14 @@
     "price": 100.0,
     "capacity": 50,
     "status": "DRAFT",
-    "additional_info": [
+    "additionalInfo": [
       "Prepare a 5-minute pitch",
       "Networking session included"
     ],
-    "authorId": "64b2f6c2e87f3c98d10a1a2e",
-    "createdAt": "2025-01-27T12:00:00Z",
-    "updatedAt": "2025-01-27T12:00:00Z"
+    "authorId": "64b2f2c2e87f3198d10a1a2b"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a214",
+    "id": "64b2f2c2e87f3198d10a1a1f",
     "title": "Film Festival 2025",
     "date": "2025-06-10T00:00:00Z",
     "time": "7:00 PM",
@@ -99,9 +89,7 @@
     "price": 30.0,
     "capacity": 300,
     "status": "PUBLISHED",
-    "additional_info": ["Meet the directors", "Exclusive premieres"],
-    "authorId": "64b2f6c2e87f3c98d10a1a2c",
-    "createdAt": "2025-01-27T12:00:00Z",
-    "updatedAt": "2025-01-27T12:00:00Z"
+    "additionalInfo": ["Meet the directors", "Exclusive premieres"],
+    "authorId": "64b2f6c2e87f3c98d10a1a2c"
   }
 ]

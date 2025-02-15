@@ -1,16 +1,10 @@
 [
   {
-    "_id": "64b2f6c2e87f3c98d10a215",
-    "eventId": "64b2f6c2e87f3c98d10a211",
-    "userId": "64b2f6c2e87f3c98d10a1a2b",
-    "createdAt": "2025-01-27T10:00:00Z",
-    "updatedAt": "2025-01-27T10:00:00Z"
+    "eventId": "64b2f2c2e87f3198d10a1a1a",
+    "userId": "64b2f6c2e87f3198d10a1a2b"
   },
   {
-    "_id": "64b2f6c2e87f3c98d10a216",
-    "eventId": "64b2f6c2e87f3c98d10a212",
-    "userId": "64b2f6c2e87f3c98d10a1a2e",
-    "createdAt": "2025-01-27T10:00:00Z",
-    "updatedAt": "2025-01-27T10:00:00Z"
+    "eventId": "64b2f2c2e87f3198d10a1a1c",
+    "userId": "64b2f6c2e87f3198d10a1a2b"
   }
 ]

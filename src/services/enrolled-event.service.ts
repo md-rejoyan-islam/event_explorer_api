@@ -88,6 +88,7 @@ export class EnrolledEventService {
     const user: User | null = await prismaClient.user.findUnique({
       where: { id: userId },
     });
+
     if (!user) {
       throw new Error("User not found");
     }
@@ -96,6 +97,9 @@ export class EnrolledEventService {
     const event: Event | null = await prismaClient.event.findUnique({
       where: { id: eventId },
     });
+
+    console.log("event", event);
+
     if (!event) {
       throw new Error("Event not found");
     }
@@ -108,6 +112,8 @@ export class EnrolledEventService {
     if (userEnrolled) {
       throw new Error("User already enrolled");
     }
+
+    console.log("userEnrolled", userEnrolled);
 
     // Enroll the user in the event
     const enrolledEvent = await prismaClient.enrolledEvent.create({

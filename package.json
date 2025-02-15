@@ -16,7 +16,7 @@
   "description": "",
   "dependencies": {
     "@apollo/server": "^4.11.3",
-    "@prisma/client": "^6.2.1",
+    "@prisma/client": "^6.3.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -35,7 +35,7 @@
     "@types/node": "^22.10.10",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9",
-    "prisma": "^6.2.1",
+    "prisma": "^6.3.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }

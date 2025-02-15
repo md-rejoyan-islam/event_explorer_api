@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(cuid()) @map("_id")
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
   email          String          @unique
   password       String?
@@ -23,7 +23,7 @@ model User {
 }
 
 model Event {
-  id             String          @id @default(cuid()) @map("_id")
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
   title          String
   date           DateTime
   time           String
@@ -36,7 +36,7 @@ model Event {
   status         Status          @default(DRAFT)
   additionalInfo String[]        @map("additional_info")
   organizer      User?           @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId       String
+  authorId       String          @db.ObjectId
   EnrolledEvents EnrolledEvent[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -45,11 +45,11 @@ model Event {
 }
 
 model EnrolledEvent {
-  id        String   @id @default(cuid()) @map("_id")
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId   String
+  eventId   String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
+  userId    String   @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
