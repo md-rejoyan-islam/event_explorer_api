@@ -18,7 +18,11 @@ export class UserService {
    * @access public
    */
   static async getUserById(id: string): Promise<User | null> {
-    return prismaClient.user.findUnique({ where: { id } });
+    const user = await prismaClient.user.findUnique({ where: { id } });
+
+    return user
+      ? { ...user, password: user?.password ?? "", role: user.role ?? "USER" }
+      : null;
   }
 
   /**
@@ -65,7 +69,11 @@ export class UserService {
    * @access Admin
    * */
   static async getUserByEmail(email: string): Promise<User | null> {
-    return prismaClient.user.findUnique({ where: { email } });
+    const user = await prismaClient.user.findUnique({ where: { email } });
+
+    return user
+      ? { ...user, password: user?.password ?? "", role: user.role ?? "USER" }
+      : null;
   }
 
   /**
@@ -139,7 +147,7 @@ export class UserService {
    * @param profileUpdate
    * @returns {Promise<User>}
    * @description Update user by ID
-   * @access Admin
+   * @access protected
    * */
   static async updateUserById(profileUpdate: User): Promise<User> {
     const { id, ...update } = profileUpdate;
@@ -152,7 +160,7 @@ export class UserService {
    * @param id
    * @returns {Promise<User | null>}
    * @description Delete user by ID
-   * @access Admin
+   * @access protected
    * */
   static async deleteUserById(id: string): Promise<User | null> {
     return prismaClient.user.delete({ where: { id } });

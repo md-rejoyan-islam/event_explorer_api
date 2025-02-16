@@ -73,6 +73,22 @@ export class EnrolledEventService {
 
   /**
    * @static
+   * @type Query
+   * @param userId
+   * @returns EnrolledEvent[]
+   * @description Get all enrolled events by a specific user ID
+   * @access protected
+   * */
+  static async getEnrolledEventsByUserId(
+    userId: string
+  ): Promise<EnrolledEvent[]> {
+    return await prismaClient.enrolledEvent.findMany({
+      where: { userId },
+    });
+  }
+
+  /**
+   * @static
    * @type Mutation
    * @param userId
    * @param eventId
@@ -120,5 +136,34 @@ export class EnrolledEventService {
       data: { userId, eventId },
     });
     return enrolledEvent;
+  }
+
+  /**
+   * @static
+   * @type Mutation
+   * @param userId
+   * @param eventId
+   * @returns EnrolledEvent
+   * @description Unenroll a user from an event
+   * @access protected
+   * */
+  static async unenrollEvent(
+    userId: string,
+    eventId: string
+  ): Promise<EnrolledEvent> {
+    // Check if user is enrolled
+    const userEnrolled: EnrolledEvent | null =
+      await prismaClient.enrolledEvent.findFirst({
+        where: { userId, eventId },
+      });
+    if (!userEnrolled) {
+      throw new Error("User not enrolled");
+    }
+
+    // Unenroll the user from the event
+    await prismaClient.enrolledEvent.delete({
+      where: { id: userEnrolled.id },
+    });
+    return userEnrolled;
   }
 }

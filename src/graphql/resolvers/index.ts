@@ -1,6 +1,7 @@
 import { mergeResolvers } from "@graphql-tools/merge";
 import enrolledEventResolver from "./enrolled.resolver";
 import eventResolver from "./event.resolver";
+import messageResolver from "./message.resolver";
 import seedResolver from "./seed.resolver";
 import userResolver from "./user.resolver";
 
@@ -10,6 +11,7 @@ const resolvers = mergeResolvers([
   eventResolver,
   enrolledEventResolver,
   seedResolver,
+  messageResolver,
 ]);
 
 export default resolvers;

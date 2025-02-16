@@ -16,9 +16,16 @@
 import { mergeTypeDefs } from "@graphql-tools/merge";
 import EnrolledTypes from "./enrolled.types";
 import EventType from "./event.types";
+import messageType from "./message.types";
 import SeedType from "./seed.types";
 import UserType from "./user.types";
 
-const typeDefs = mergeTypeDefs([UserType, EventType, EnrolledTypes, SeedType]);
+const typeDefs = mergeTypeDefs([
+  UserType,
+  EventType,
+  EnrolledTypes,
+  SeedType,
+  messageType,
+]);
 
 export default typeDefs;

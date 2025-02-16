@@ -42,6 +42,7 @@ const isAuthenticated =
           email: decode.email,
         },
       });
+
       context.user = {
         ...user,
         name: user?.name || null,

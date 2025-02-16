@@ -18,6 +18,7 @@ model User {
   enrolledEvents EnrolledEvent[]
   createdAt      DateTime?       @default(now())
   updatedAt      DateTime?       @updatedAt
+  Message        Message[]
 
   @@map("users")
 }
@@ -54,6 +55,17 @@ model EnrolledEvent {
   updatedAt DateTime @updatedAt
 
   @@map("enrolled_events")
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  message   String
+  sender    User?    @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
 }
 
 enum Role {

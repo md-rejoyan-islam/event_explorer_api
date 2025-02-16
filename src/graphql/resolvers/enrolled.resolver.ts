@@ -51,6 +51,19 @@ const Query = {
       return await EnrolledEventService.getEnrolledEventsByCreaterId(authorId);
     }
   ),
+
+  /**
+   * @description Get all enrolled events by a specific user ID
+   * @access protected
+   * */
+  getEnrolledEventsByUserId: isAuthenticated(
+    async (
+      _: unknown,
+      { userId }: { userId: string }
+    ): Promise<EnrolledEvent[]> => {
+      return await EnrolledEventService.getEnrolledEventsByUserId(userId);
+    }
+  ),
 };
 
 const Mutation = {
@@ -64,6 +77,18 @@ const Mutation = {
       { userId, eventId }: { userId: string; eventId: string }
     ): Promise<EnrolledEvent> => {
       return await EnrolledEventService.enrollEvent(userId, eventId);
+    }
+  ),
+  /**
+   * @description Unenroll in an event
+   * @access protected
+   * */
+  unenrollEvent: isAuthenticated(
+    async (
+      _: unknown,
+      { userId, eventId }: { userId: string; eventId: string }
+    ): Promise<EnrolledEvent> => {
+      return await EnrolledEventService.unenrollEvent(userId, eventId);
     }
   ),
 };

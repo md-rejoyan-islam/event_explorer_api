@@ -4,10 +4,12 @@ type Query {
   allEnrolledEvents: [EnrolledEvent]
   checkEnrolledEvent(eventId: ID!, userId: ID!): Boolean
   getEnrolledEventsByCreaterId(authorId: ID!): [EnrolledEvent]
+  getEnrolledEventsByUserId(userId: ID!): [EnrolledEvent]
 }
 
 type Mutation {
   enrollEvent(eventId: ID!, userId: ID!): EnrolledEvent
+  unenrollEvent(eventId: ID!, userId: ID!): EnrolledEvent
 }
 
 # type Subscription {}

@@ -94,7 +94,7 @@ export class EventService {
    * @param userId
    * @returns Event[]
    * @description Get all events by a specific user ID
-   * @access Admin
+   * @access protected (Admin)
    * */
   static async getAllEventsByUserId(userId: string): Promise<Event[]> {
     return await prismaClient.event.findMany({
@@ -108,7 +108,7 @@ export class EventService {
    * @param eventData
    * @returns Event
    * @description Create a new event
-   * @access Admin
+   * @access protected (Admin)
    * */
   static async createEvent(eventData: Event): Promise<Event> {
     return await prismaClient.event.create({
@@ -122,7 +122,7 @@ export class EventService {
    * @param updateData
    * @returns Event
    * @description Update event by ID
-   * @access Admin
+   * @access protected (Admin)
    * */
   static async updateEventById(updateData: Event): Promise<Event> {
     const { id, ...update } = updateData;
@@ -147,7 +147,7 @@ export class EventService {
    * @param id
    * @returns Event | null
    * @description Delete event by ID
-   * @access Admin
+   * @access protected (Admin)
    * */
   static async deleteEventById(id: string): Promise<Event | null> {
     const event = await prismaClient.event.findFirst({
