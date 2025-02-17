@@ -27,7 +27,6 @@ type Event {
   location: String!
   category: String!
   description: String!
-  image: String!
   price: String!
   capacity: Int!
   organizer: User
@@ -45,7 +44,6 @@ input eventCreate {
   location: String!
   category: String!
   description: String!
-  image: String!
   price: Float!
   capacity: Int!
   authorId: ID!

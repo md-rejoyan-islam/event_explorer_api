@@ -31,7 +31,6 @@ model Event {
   location       String
   category       String
   description    String
-  image          String
   price          Float
   capacity       Int
   status         Status          @default(DRAFT)
