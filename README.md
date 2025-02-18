@@ -153,7 +153,7 @@ This is an Event Handler API built using **Express**, **GraphQL**, and **Apollo 
 
 ## Links
 
-[Backend Repository](https://github.com/md-rejoyan-islam/event_explorer_client)
+[Client Repository](https://github.com/md-rejoyan-islam/event_explorer_client)
 
 [Website Live Demo](https://event-explorer.vercel.app)
 
