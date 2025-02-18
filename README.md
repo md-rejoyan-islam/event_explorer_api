@@ -151,6 +151,14 @@ This is an Event Handler API built using **Express**, **GraphQL**, and **Apollo 
   - Unenroll from Event
   - View Enrolled Events
 
+## Links
+
+[Backend Repository](https://github.com/md-rejoyan-islam/event_explorer_client)
+
+[Website Live Demo](https://event-explorer.vercel.app)
+
+[API Demo](https://ministerial-gabriel-rejoyan-cd2987cb.koyeb.app/graphql)
+
 ## Contact
 
 For questions or suggestions, feel free to reach out:
