@@ -8,7 +8,7 @@
     "category": "Technology",
     "description": "A conference for tech enthusiasts and professionals. Includes workshops, panel discussions, and networking opportunities. Expert speakers from leading tech companies. Don't miss this opportunity to learn and connect with the tech community. Tickets are limited, so book now!. ",
     "price": 50.0,
-    "capacity": 200,
+    "capacity": 25,
     "status": "PUBLISHED",
     "additionalInfo": ["Bring your laptop", "Networking event included"],
     "authorId": "64b2f2c2e87f3198d10a1a2b"
@@ -22,7 +22,7 @@
     "category": "Music",
     "description": "A day full of music and fun. Featuring live performances by top artists. Food trucks and drinks available. Bring your friends and family for a day to remember. Tickets are selling fast, so get yours now!. ",
     "price": 25.0,
-    "capacity": 500,
+    "capacity": 35,
     "status": "DRAFT",
     "additionalInfo": ["Outdoor event", "Food trucks available"],
     "authorId": "64b2f2c2e87f3198d10a1a2b"
@@ -36,7 +36,7 @@
     "category": "Art",
     "description": "An exhibition showcasing modern art. Featuring paintings, sculptures, and installations by local and international artists. Workshops and interactive art activities available. Don't miss this opportunity to experience the world of art. Tickets are limited, so book now!. ",
     "price": 20.0,
-    "capacity": 100,
+    "capacity": 50,
     "status": "PUBLISHED",
     "additionalInfo": ["Workshops available", "Interactive art"],
     "authorId": "64b2f6c2e87f3c98d10a1a2c"
@@ -78,10 +78,10 @@
     "date": "2025-06-10T00:00:00Z",
     "time": "7:00 PM",
     "location": "Grand Theater",
-    "category": "Film",
+    "category": "Art",
     "description": "Showcasing indie films from around the world. Screenings, Q&A sessions, and awards ceremony. Meet the directors and actors behind the films. Limited tickets available, so book now!. Includes access to all film screenings and events.",
     "price": 30.0,
-    "capacity": 300,
+    "capacity": 20,
     "status": "PUBLISHED",
     "additionalInfo": ["Meet the directors", "Exclusive premieres"],
     "authorId": "64b2f6c2e87f3c98d10a1a2c"
@@ -92,13 +92,13 @@
     "date": "2025-07-15T00:00:00Z",
     "time": "10:00 AM",
     "location": "Convention Center",
-    "category": "Food",
+    "category": "Fashion",
     "description": "A culinary event featuring top chefs. Cooking demos, tasting sessions, and food stalls. Try out the latest food trends and flavors. Limited tickets available, so book now!. Includes access to all food stalls and events.",
     "price": 75.0,
-    "capacity": 150,
+    "capacity": 40,
     "status": "PUBLISHED",
     "additionalInfo": ["Live cooking demos", "Tasting sessions"],
-    "authorId": "64b2f2c2e87f3198d10a1a2b"
+    "authorId": "64b2f6c2e87f3c98d10a1a2c"
   },
   {
     "id": "64b2f2c2e86f3198d10a1a1e",
@@ -109,10 +109,10 @@
     "category": "Fashion",
     "description": "Featuring the latest trends in fashion. Runway show with designer collections. Meet the designers and models. Limited tickets available, so book now!. Includes access to the fashion show and exclusive discounts.",
     "price": 50.0,
-    "capacity": 200,
+    "capacity": 50,
     "status": "PUBLISHED",
     "additionalInfo": ["Runway show", "Designer collections"],
-    "authorId": "64b2f2c2e87f3198d10a1a2b"
+    "authorId": "64b2f6c2e87f3c98d10a1a2c"
   },
   {
     "id": "64b2f2c2e87f1198d10a1a19",
@@ -120,10 +120,10 @@
     "date": "2025-09-05T00:00:00Z",
     "time": "11:00 AM",
     "location": "Public Library",
-    "category": "Literature",
+    "category": "Business",
     "description": "A gathering of book lovers and authors. Book signings, author talks, and book readings. Meet your favorite authors and discover new books. Limited tickets available, so book now!. Includes access to all author talks and book signings.",
     "price": 10.0,
-    "capacity": 100,
+    "capacity": 30,
     "status": "PUBLISHED",
     "additionalInfo": ["Book signings", "Author talks"],
     "authorId": "64b2f6c2e87f3c98d10a1a2c"
