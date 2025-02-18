@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
+import { Event } from "@prisma/client";
 import { hashPassword } from "../utils/hash-password";
 import { prismaClient } from "../utils/prisma-client";
 
@@ -38,7 +39,12 @@ class SeedService {
   // bulk event create
   static seedEvents = async (): Promise<boolean> => {
     const eventsFilePath = path.resolve(__dirname, "../../data/events.json");
-    const events = JSON.parse(fs.readFileSync(eventsFilePath, "utf-8"));
+    const eventsData = JSON.parse(fs.readFileSync(eventsFilePath, "utf-8"));
+
+    const events = eventsData.map((event: Event) => ({
+      ...event,
+      category: event.category,
+    }));
 
     try {
       // delete all events

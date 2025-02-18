@@ -166,4 +166,11 @@ export class EnrolledEventService {
     });
     return userEnrolled;
   }
+
+  static async totalEnrolledEventsByEventId(eventId: string): Promise<number> {
+    const total = await prismaClient.enrolledEvent.count({
+      where: { eventId },
+    });
+    return total;
+  }
 }

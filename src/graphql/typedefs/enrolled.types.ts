@@ -5,6 +5,7 @@ type Query {
   checkEnrolledEvent(eventId: ID!, userId: ID!): Boolean
   getEnrolledEventsByCreaterId(authorId: ID!): [EnrolledEvent]
   getEnrolledEventsByUserId(userId: ID!): [EnrolledEvent]
+  totalEnrolledEventsByEventId(eventId: ID!): Int
 }
 
 type Mutation {

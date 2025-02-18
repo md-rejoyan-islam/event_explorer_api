@@ -35,6 +35,7 @@ type Event {
   status: String!
   createdAt: String!
   updatedAt: String!
+  totalEnrolled: Int
 }
 
 input eventCreate {

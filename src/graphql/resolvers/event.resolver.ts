@@ -1,6 +1,7 @@
 import { Event, User } from "@prisma/client";
 import isAdmin from "../../middlewares/isAdmin.middleware";
 import isAuthenticated from "../../middlewares/isAuthenticated.middleware";
+import { EnrolledEventService } from "../../services/enrolled-event.service";
 import { EventService } from "../../services/event.service";
 
 const Query = {
@@ -66,6 +67,9 @@ const eventResolver = {
   Event: {
     organizer: async (parent: Event): Promise<User | null> => {
       return await EventService.getOrganizer(parent);
+    },
+    totalEnrolled: async (parent: Event): Promise<number> => {
+      return await EnrolledEventService.totalEnrolledEventsByEventId(parent.id);
     },
   },
 };

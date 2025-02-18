@@ -64,6 +64,15 @@ const Query = {
       return await EnrolledEventService.getEnrolledEventsByUserId(userId);
     }
   ),
+  /**
+   * @description Get total enrolled events by event ID
+   * @access protected
+   * */
+  totalEnrolledEventsByEventId: isAuthenticated(
+    async (_: unknown, { eventId }: { eventId: string }): Promise<number> => {
+      return await EnrolledEventService.totalEnrolledEventsByEventId(eventId);
+    }
+  ),
 };
 
 const Mutation = {

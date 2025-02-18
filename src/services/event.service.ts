@@ -112,7 +112,7 @@ export class EventService {
    * */
   static async createEvent(eventData: Event): Promise<Event> {
     return await prismaClient.event.create({
-      data: eventData,
+      data: { ...eventData, category: eventData.category.toLowerCase() },
     });
   }
 
@@ -126,6 +126,10 @@ export class EventService {
    * */
   static async updateEventById(updateData: Event): Promise<Event> {
     const { id, ...update } = updateData;
+
+    if (update.category) {
+      update.category = update.category.toLowerCase();
+    }
 
     const eventCount = await prismaClient.event.count({
       where: { id },
