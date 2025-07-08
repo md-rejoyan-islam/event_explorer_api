@@ -1,4 +1,6 @@
-import { Event, User } from "@prisma/client";
+import type { Event, User } from "@prisma/client";
+import createHttpError from "http-errors";
+import { isValidMongoDBObjectId } from "../utils/mongodb-object-id";
 import { prismaClient } from "../utils/prisma-client";
 import { PAGE_INFO } from "../utils/types";
 
@@ -12,7 +14,17 @@ export class EventService {
    * @access public
    * */
   static async getEventById(id: string): Promise<Event | null> {
-    return await prismaClient.event.findUnique({ where: { id } });
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(id)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+    const event = await prismaClient.event.findUnique({
+      where: { id },
+    });
+
+    if (!event) throw createHttpError.NotFound("Event not found");
+
+    return event;
   }
 
   /**
@@ -76,8 +88,10 @@ export class EventService {
    * @description Get all unique event categories
    * @access public
    * */
-  static async getAllEventsCategory(): Promise<{ data: String[] }> {
-    const results = await prismaClient.event.findMany({
+  static async getAllEventsCategory(): Promise<{ data: string[] }> {
+    const results: {
+      category: string;
+    }[] = await prismaClient.event.findMany({
       select: {
         category: true,
       },
@@ -97,6 +111,11 @@ export class EventService {
    * @access protected (Admin)
    * */
   static async getAllEventsByUserId(userId: string): Promise<Event[]> {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(userId)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     return await prismaClient.event.findMany({
       where: { authorId: userId },
     });
@@ -136,7 +155,7 @@ export class EventService {
     });
 
     if (eventCount < 1) {
-      throw new Error("Event not found");
+      throw createHttpError.NotFound("Event not found");
     }
 
     return await prismaClient.event.update({
@@ -159,7 +178,7 @@ export class EventService {
     });
 
     if (!event) {
-      throw new Error("Event not found");
+      throw createHttpError.NotFound("Event not found");
     }
 
     await prismaClient.event.delete({

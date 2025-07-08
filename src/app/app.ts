@@ -1,8 +1,7 @@
 import { expressMiddleware } from "@apollo/server/express4";
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express, Response } from "express";
-import morgan from "morgan";
+import express, { Application, NextFunction, Request, Response } from "express";
 import createGraphQLServer from "../graphql";
 import router from "./routes";
 
@@ -12,12 +11,12 @@ const port = Number(process.env.PORT) || 4000;
 const env = process.env.NODE_ENV || "development";
 
 export default async function graphQlServer(): Promise<void> {
-  const app: Express = express();
+  const app: Application = express();
   app.use(cors());
   app.use(express.json());
 
   if (env === "development") {
-    app.use(morgan("dev"));
+    app.use(require("morgan")("dev"));
   }
 
   app.use(router);
@@ -37,10 +36,15 @@ export default async function graphQlServer(): Promise<void> {
   );
 
   // not found route
-  app.use("*", (_, res: Response) => {
-    res.status(404).json({
+  app.use("*", (_, _res: Response) => {
+    throw new Error("Route not found");
+  });
+
+  app.use((err: Error, _: Request, res: Response, _next: NextFunction) => {
+    res.status(500).json({
       status: "error",
-      message: "Route not found",
+      statusCode: (err as any).statusCode || 500,
+      message: err.message || "Internal Server Error",
     });
   });
 

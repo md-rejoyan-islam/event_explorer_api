@@ -1,4 +1,4 @@
-import { Event, User } from "@prisma/client";
+import type { Event, User } from "@prisma/client";
 import isAdmin from "../../middlewares/isAdmin.middleware";
 import isAuthenticated from "../../middlewares/isAuthenticated.middleware";
 import { EnrolledEventService } from "../../services/enrolled-event.service";

@@ -1,4 +1,6 @@
-import { EnrolledEvent, Event, User } from "@prisma/client";
+import type { EnrolledEvent, Event, User } from "@prisma/client";
+import createHttpError from "http-errors";
+import { isValidMongoDBObjectId } from "../utils/mongodb-object-id";
 import { prismaClient } from "../utils/prisma-client";
 
 export class EnrolledEventService {
@@ -22,11 +24,17 @@ export class EnrolledEventService {
    * @access protected
    * */
   static async getEnrolledEventById(id: string): Promise<EnrolledEvent | null> {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(id)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     const event = await prismaClient.enrolledEvent.findUnique({
       where: { id },
     });
+
     if (!event) {
-      throw new Error("Enrolled event not found");
+      throw createHttpError.NotFound("Enrolled event not found");
     }
     return event;
   }
@@ -82,6 +90,11 @@ export class EnrolledEventService {
   static async getEnrolledEventsByUserId(
     userId: string
   ): Promise<EnrolledEvent[]> {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(userId)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     return await prismaClient.enrolledEvent.findMany({
       where: { userId },
     });
@@ -100,13 +113,18 @@ export class EnrolledEventService {
     userId: string,
     eventId: string
   ): Promise<EnrolledEvent> {
+    // Validate the ID formats
+    if (!isValidMongoDBObjectId(userId) || !isValidMongoDBObjectId(eventId)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     // Check if user exists
     const user: User | null = await prismaClient.user.findUnique({
       where: { id: userId },
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw createHttpError.NotFound("User not found");
     }
 
     // Check if event exists
@@ -114,10 +132,8 @@ export class EnrolledEventService {
       where: { id: eventId },
     });
 
-    console.log("event", event);
-
     if (!event) {
-      throw new Error("Event not found");
+      throw createHttpError.NotFound("Event not found");
     }
 
     // Check if user is already enrolled
@@ -126,10 +142,8 @@ export class EnrolledEventService {
         where: { userId, eventId },
       });
     if (userEnrolled) {
-      throw new Error("User already enrolled");
+      throw createHttpError.Conflict("User already enrolled in this event");
     }
-
-    console.log("userEnrolled", userEnrolled);
 
     // Enroll the user in the event
     const enrolledEvent = await prismaClient.enrolledEvent.create({
@@ -151,13 +165,18 @@ export class EnrolledEventService {
     userId: string,
     eventId: string
   ): Promise<EnrolledEvent> {
+    // Validate the ID formats
+    if (!isValidMongoDBObjectId(userId) || !isValidMongoDBObjectId(eventId)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     // Check if user is enrolled
     const userEnrolled: EnrolledEvent | null =
       await prismaClient.enrolledEvent.findFirst({
         where: { userId, eventId },
       });
     if (!userEnrolled) {
-      throw new Error("User not enrolled");
+      throw createHttpError.NotFound("User not enrolled in this event");
     }
 
     // Unenroll the user from the event

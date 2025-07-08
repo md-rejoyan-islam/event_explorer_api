@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import { GraphQLResolveInfo } from "graphql";
 import { verifyJWT } from "../utils/jwt";
 import { prismaClient } from "../utils/prisma-client";

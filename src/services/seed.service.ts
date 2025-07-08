@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 
-import { Event } from "@prisma/client";
+import type { Event } from "@prisma/client";
+import createHttpError from "http-errors";
 import { hashPassword } from "../utils/hash-password";
 import { prismaClient } from "../utils/prisma-client";
 
@@ -29,9 +30,11 @@ class SeedService {
       return true;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message);
+        throw createHttpError.InternalServerError(error.message);
       } else {
-        throw new Error(String(error));
+        throw createHttpError.InternalServerError(
+          "An unexpected error occurred while seeding users."
+        );
       }
     }
   };
@@ -58,9 +61,11 @@ class SeedService {
       return true;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message);
+        throw createHttpError.InternalServerError(error.message);
       } else {
-        throw new Error(String(error));
+        throw createHttpError.InternalServerError(
+          "An unexpected error occurred while seeding events."
+        );
       }
     }
   };
@@ -87,9 +92,11 @@ class SeedService {
       return true;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(error.message);
+        throw createHttpError.InternalServerError(error.message);
       } else {
-        throw new Error(String(error));
+        throw createHttpError.InternalServerError(
+          "An unexpected error occurred while seeding enrolled events."
+        );
       }
     }
   };

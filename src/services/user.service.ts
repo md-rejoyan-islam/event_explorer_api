@@ -1,6 +1,8 @@
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
+import createHttpError from "http-errors";
 import { comparePassword, hashPassword } from "../utils/hash-password";
 import { createJWT } from "../utils/jwt";
+import { isValidMongoDBObjectId } from "../utils/mongodb-object-id";
 import { prismaClient } from "../utils/prisma-client";
 import {
   PAGE_INFO,
@@ -18,6 +20,11 @@ export class UserService {
    * @access public
    */
   static async getUserById(id: string): Promise<User | null> {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(id)) {
+      throw createHttpError.BadRequest("Invalid ID format");
+    }
+
     const user = await prismaClient.user.findUnique({ where: { id } });
 
     return user
@@ -103,15 +110,19 @@ export class UserService {
   }: USER_LOGIN_PARAMS): Promise<{ token: string }> {
     const user = await prismaClient.user.findUnique({ where: { email } });
 
-    if (!user) throw new Error("User not found");
-    if (!user.password) throw new Error("Please login with provider");
+    if (!user) throw createHttpError.NotFound("User not found");
+    if (!user.password)
+      throw createHttpError.Unauthorized("Please login with provider");
 
     const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) throw new Error("Wrong password");
+    if (!isMatch) throw createHttpError.Unauthorized("Wrong password");
 
     if (isAdmin && user.role !== "ADMIN")
-      throw new Error("User is not an admin");
-    if (!isAdmin && user.role === "ADMIN") throw new Error("User is an admin");
+      throw createHttpError.Forbidden("User is not an admin");
+    if (!isAdmin && user.role === "ADMIN")
+      throw createHttpError.Forbidden(
+        "User is an admin, please login as admin"
+      );
 
     const jwtToken = createJWT({ id: user.id, email: user.email });
     return { token: jwtToken };
@@ -131,7 +142,7 @@ export class UserService {
       where: { email },
     });
 
-    if (existingUser) throw new Error("User already exists");
+    if (existingUser) throw createHttpError.Conflict("User already exists");
 
     const hashedPassword = await hashPassword(registerData.password);
     const user = await prismaClient.user.create({
@@ -163,6 +174,10 @@ export class UserService {
    * @access protected
    * */
   static async deleteUserById(id: string): Promise<User | null> {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(id)) {
+      throw createHttpError.BadRequest("Invalid user ID format");
+    }
     return prismaClient.user.delete({ where: { id } });
   }
 

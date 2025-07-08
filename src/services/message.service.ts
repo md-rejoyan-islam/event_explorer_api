@@ -1,4 +1,6 @@
-import { Message } from "@prisma/client";
+import type { Message } from "@prisma/client";
+import createHttpError from "http-errors";
+import { isValidMongoDBObjectId } from "../utils/mongodb-object-id";
 import { prismaClient } from "../utils/prisma-client";
 
 class MessageService {
@@ -7,6 +9,11 @@ class MessageService {
   }
 
   static async getAllMessagesByUserId(userId: string) {
+    // Validate the userId format
+    if (!isValidMongoDBObjectId(userId)) {
+      throw createHttpError.BadRequest("Invalid user ID format");
+    }
+
     return await prismaClient.message.findMany({
       where: { senderId: userId },
     });
@@ -26,6 +33,11 @@ class MessageService {
   }
 
   static async deleteMessageById(id: string) {
+    // Validate the ID format
+    if (!isValidMongoDBObjectId(id)) {
+      throw createHttpError.BadRequest("Invalid message ID format");
+    }
+
     return await prismaClient.message.delete({
       where: { id },
     });
